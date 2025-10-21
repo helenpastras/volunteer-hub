@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{% static 'css/landing.css' %}"
+/>
+{% endblock %} {% block content %}
+<h1>Volunteer Hub</h1>
+<h2>A community hub for where you can find volunteering opportunities near you, add your own, and manage your saves.</h2>
+{% if not user.is_authenticated %}
+  <section class="auth-options">
+    <h2>Welcome to the CardCollector!</h2>
+    <p>Log in to view and manage your cards or sign up to join the fun!</p>
+        <div class="auth-options">
+          <a href="{% url 'login' %}" class="btn">Login</a>
+          <a href="{% url 'signup' %}" class="btn">Sign Up</a>
+        </div>
+      </section>
+      {% else %}
+      <section class="welcome-back">
+        <h2>Welcome back {{ user.username }}</h2>
+        <a href="{% url 'user-opps-index' %}" class="btn">Go to My Opportunities</a>
+        
+      </section>
+      <section class= "opportunity-container">
+        {% for opportunity in opportunities %}
+        <div class = "card">
+          <a href="{% url 'opportunity-detail' opportunity.id %}"></a>
+          <h2 class="opportunity-title">{{ opportunity.title }}</h2>
+          <p><strong>Where?  {{opportunity.location}}</strong></p>
+          <p><strong>When? {{opportunity.date}}</strong></p>
+          <p>Tags:  {{opportunity.tags}}</p>
+      <p>Description: <small>{{opprtunity.description}}</small></p>
+        </div>
+
+      </section>
+{% endif %}
+
+
+{% endblock %}
