@@ -1,20 +1,20 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView,UpdateView, DeleteView
+from django.views.generic.detail import DetailView
 from django.forms import modelformset_factory
-from .models import Opportunity
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.http import HttpResponse
+from .models import Opportunity, Like, Bookmark
 
 
 def home(request):
-    # Send a simple HTML response
-    return HttpResponse('<h1>Hello and Welcme to the amazing Volunteer Hub.</h1>')
+    opportunities = Opportunity.objects.all()
+    return render(request, 'landing.html')
 
 
 def signup(request):
@@ -28,13 +28,53 @@ def signup(request):
             user = form.save()
             # This is how we log a user in
             login(request, user)
-            return redirect('landing')
+            return redirect('home')
         else:
             error_message = 'Invalid sign up - try again'
     # A bad POST or a GET request, so render signup.html with an empty form
     form = UserCreationForm()
     context = {'form': form, 'error_message': error_message}
-    return render(request, 'registration/signup.html', {'form':form})
+    return render(request, 'registration/signup.html', context)
+
+def opps_index(request):
+    opportunities = Opportunity.objects.all()
+    return render(request, 'opportunities/index.html', {'opportunities': opportunities})
+
+def about(request):
+    return render(request, 'about.html')
+
+@login_required
+def user_opps_index(request):
+    user = request.user
+    created_opps = Opportunity.objects.filter(created_by=user)
+    liked_opps = Opportunity.objects.filter(like__user=user)
+    bookmarked_opps = Opportunity.objects.filter(bookmark__user=user)
+
+    context = {
+        'created_opps': created_opps,
+        'liked_opps': liked_opps,
+        'bookmarked_opps': bookmarked_opps,
+    }
+    return render(request, 'opportunities/user_index.html', context)
+
+
+def likes_index(request):
+    return render(request, 'likes/index.html')
+
+def bookmarks_index(request):
+    return render(request, 'bookmarks/index.html')
 
 
 # CRUD
+class OpportunityCreate(LoginRequiredMixin, CreateView):
+    model = Opportunity
+    fields = ['title', 'description', 'location', 'date', 'tags']
+    template_name = 'opportunities/opportunity_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+class OpportunityDetail(DetailView):
+    model = Opportunity
+    template_name = 'opportunities/opportunity_detail.html'

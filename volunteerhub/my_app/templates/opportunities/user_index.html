@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>My Opportunities</h1>
+
+  <section>
+    <h2>Created by Me</h2>
+    {% for opp in created_opps %}
+      <div class="card">
+        <a href="{% url 'opportunity-detail' opp.id %}">{{ opp.title }}</a>
+        <p>{{ opp.location }} — {{ opp.date }}</p>
+      </div>
+    {% empty %}
+      <p>You haven’t created any opportunities yet.</p>
+    {% endfor %}
+  </section>
+
+  <section>
+    <h2>Liked Opportunities</h2>
+    {% for opp in liked_opps %}
+      <div class="card">
+        <a href="{% url 'opportunity-detail' opp.id %}">{{ opp.title }}</a>
+        <p>{{ opp.location }} — {{ opp.date }}</p>
+      </div>
+    {% empty %}
+      <p>You haven’t liked any opportunities yet.</p>
+    {% endfor %}
+  </section>
+
+  <section>
+    <h2>Saved Opportunities</h2>
+    {% for opp in bookmarked_opps %}
+      <div class="card">
+        <a href="{% url 'opportunity-detail' opp.id %}">{{ opp.title }}</a>
+        <p>{{ opp.location }} — {{ opp.date }}</p>
+      </div>
+    {% empty %}
+      <p>You haven’t saved any opportunities yet.</p>
+    {% endfor %}
+  </section>
+{% endblock %}
