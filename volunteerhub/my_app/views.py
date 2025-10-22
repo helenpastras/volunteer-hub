@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView,UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.forms import modelformset_factory
@@ -7,14 +8,13 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Opportunity, Like, Bookmark
 
 
 def home(request):
     opportunities = Opportunity.objects.all()
-    return render(request, 'landing.html')
+    return render(request, 'home.html', {'opportunities': opportunities})
 
 
 def signup(request):
@@ -78,3 +78,21 @@ class OpportunityCreate(LoginRequiredMixin, CreateView):
 class OpportunityDetail(DetailView):
     model = Opportunity
     template_name = 'opportunities/opportunity_detail.html'
+
+
+class OpportunityUpdate(LoginRequiredMixin, UserPassesTestMixin , UpdateView):
+    model=Opportunity
+    fields= ['title', 'description', 'location', 'date', 'tags']
+    template_name = 'opportunities/opportunity_form.html'
+
+    def test_func(self):
+        return self.get_object().created_by == self.request.user
+    
+
+class OpportunityDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Opportunity
+    template_name = 'opportunities/opportunity_confirm_delete.html'
+    success_url = reverse_lazy('user-opps-index')
+
+    def test_func(self):
+        return self.get_object().created_by == self.request.user

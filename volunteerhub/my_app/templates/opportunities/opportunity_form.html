@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h1>Add a New Opportunity</h1>
+  <h1>
+  {% if opportunity %}
+    Edit {{ opportunity.title }}
+  {% else %}
+    Add a New Opportunity
+  {% endif %}
+</h1>
   <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn">Create Opportunity</button>
+    <button type="submit" class="btn">
+        {% if opportunity %}
+          Update Opportunity
+        {% else %}
+          Add Opportunity
+        {% endif %}
+    </button>
   </form>
 {% endblock %}

@@ -8,6 +8,10 @@
       <div class="card">
         <a href="{% url 'opportunity-detail' opp.id %}">{{ opp.title }}</a>
         <p>{{ opp.location }} — {{ opp.date }}</p>
+        <div class="actions">
+          <a href="{% url 'opportunity-update' opp.pk %}" class="btn">Edit</a>
+          <a href="{% url 'opportunity-delete' opp.pk %}" class="btn danger">Delete</a>
+        </div>
       </div>
     {% empty %}
       <p>You haven’t created any opportunities yet.</p>

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Delete Opportunity: </h2>
+  <p>Are you sure you want to delete <strong>"{{ opportunity.title }}"</strong>?</p>
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn danger">Yes, delete</button>
+    <a href="{% url 'opportunity-detail' opportunity.pk %}">Cancel</a>
+  </form>
+{% endblock %}
