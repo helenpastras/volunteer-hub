@@ -27,21 +27,9 @@
 
   <section class="opportunity-container">
     {% for opportunity in opportunities %}
-      <div class="card">
-        <a href="{% url 'opportunity-detail' opportunity.id %}">
-          <h2 class="opportunity-title">{{ opportunity.title }}</h2>
-        </a>
-        <p><strong>Where?</strong> {{ opportunity.location }}</p>
-        <p><strong>When?</strong> {{ opportunity.date }}</p>
-        <p><strong>Tags:</strong>
-          {% for tag in opportunity.tags.all %}
-            <span class="tag">{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
-          {% empty %}
-            <em>No tags</em>
-          {% endfor %}
-        </p>
-        <p><strong>Description:</strong> <small>{{ opportunity.description }}</small></p>
-      </div>
+      {% include 'opportunities/_opportunity_card.html' %}
+    
+    
     {% empty %}
       <p>No opportunities available yet. Be the first to <a href="{% url 'opp-create' %}">add one</a>!</p>
     {% endfor %}

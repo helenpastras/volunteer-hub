@@ -36,8 +36,8 @@ class Opportunity(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    opportunity = models.ForeignKey(Opportunity, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='liked_opportunities')
+    opportunity = models.ForeignKey(Opportunity, on_delete=models.CASCADE, related_name='likes')
     created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -46,13 +46,14 @@ class Like(models.Model):
     def __str__(self):
         return f"{self.user.username} liked {self.opportunity.title}"
 
+
 class Bookmark(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    opportunity = models.ForeignKey(Opportunity, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookmarked_opportunities')
+    opportunity = models.ForeignKey(Opportunity, on_delete=models.CASCADE, related_name='bookmarks')
     created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        unique_together = ('user', 'opportunity')  # Prevent duplicate bookmarks
+        unique_together = ('user', 'opportunity')
 
     def __str__(self):
         return f"{self.user.username} bookmarked {self.opportunity.title}"

@@ -14,7 +14,25 @@ from .models import Opportunity, Like, Bookmark
 
 def home(request):
     opportunities = Opportunity.objects.all()
-    return render(request, 'home.html', {'opportunities': opportunities})
+    liked_opps = request.user.liked_opportunities.all() if request.user.is_authenticated else []
+    bookmarked_opps = request.user.bookmarked_opportunities.all() if request.user.is_authenticated else []
+
+    return render(request, 'home.html', {
+        'opportunities': opportunities,
+        'liked_opps': liked_opps,
+        'bookmarked_opps': bookmarked_opps,
+    })
+
+def like_opportunity(request, pk):
+    opportunity = get_object_or_404(Opportunity, pk=pk)
+    Like.objects.get_or_create(user=request.user, opportunity=opportunity)
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+def bookmark_opportunity(request, pk):
+    opportunity = get_object_or_404(Opportunity, pk=pk)
+    Bookmark.objects.get_or_create(user=request.user, opportunity=opportunity)
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+
 
 
 def signup(request):
@@ -38,7 +56,14 @@ def signup(request):
 
 def opps_index(request):
     opportunities = Opportunity.objects.all()
-    return render(request, 'opportunities/index.html', {'opportunities': opportunities})
+    liked_opps = request.user.liked_opportunities.all() if request.user.is_authenticated else []
+    bookmarked_opps = request.user.bookmarked_opportunities.all() if request.user.is_authenticated else []
+
+    return render(request, 'opportunities/index.html', {
+        'opportunities': opportunities,
+        'liked_opps': liked_opps,
+        'bookmarked_opps': bookmarked_opps,
+        })
 
 def about(request):
     return render(request, 'about.html')
@@ -47,8 +72,8 @@ def about(request):
 def user_opps_index(request):
     user = request.user
     created_opps = Opportunity.objects.filter(created_by=user)
-    liked_opps = Opportunity.objects.filter(like__user=user)
-    bookmarked_opps = Opportunity.objects.filter(bookmark__user=user)
+    liked_opps = Opportunity.objects.filter(likes__user=user)
+    bookmarked_opps = Opportunity.objects.filter(bookmarks__user=user)
 
     context = {
         'created_opps': created_opps,
@@ -59,10 +84,16 @@ def user_opps_index(request):
 
 
 def likes_index(request):
-    return render(request, 'likes/index.html')
+    liked_opps = request.user.liked_opportunities.all()
+    return render(request, 'likes_index.html', {
+        'liked_opps': liked_opps,
+    })
 
 def bookmarks_index(request):
-    return render(request, 'bookmarks/index.html')
+    bookmarked_opps = request.user.bookmarked_opportunities.all()
+    return render(request, 'bookmarks/index.html', {
+        'bookmarked_opps': bookmarked_opps,
+    })
 
 
 # CRUD

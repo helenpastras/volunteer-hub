@@ -3,14 +3,11 @@
   <h1>All Opportunities</h1>
 
   {% if opportunities %}
-    <ul>
+    <section class="opportunity-container">
       {% for opportunity in opportunities %}
-        <li>
-          <a href="{% url 'opportunity-detail' opportunity.pk %}">{{ opportunity.title }}</a>
-          — {{ opportunity.location }} on {{ opportunity.date }}
-        </li>
+        {% include 'opportunities/_opportunity_card.html' %}
       {% endfor %}
-    </ul>
+    </section>
   {% else %}
     <p>No opportunities yet. Be the first to <a href="{% url 'opp-create' %}">create one</a>!</p>
   {% endif %}

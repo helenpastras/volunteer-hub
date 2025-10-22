@@ -1,0 +1,25 @@
+<div class="card">
+  <a href="{% url 'opportunity-detail' opportunity.id %}">
+    <h2 class="opportunity-title">{{ opportunity.title }}</h2>
+  </a>
+  <p><strong>Where?</strong> {{ opportunity.location }}</p>
+  <p><strong>When?</strong> {{ opportunity.date }}</p>
+  <p><strong>Description:</strong> <small>{{ opportunity.description }}</small></p>
+
+  {% if user.is_authenticated %}
+    <form method="POST" action="{% url 'like-opportunity' opportunity.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn">
+        {% if opportunity in liked_opps %} ❤️ Unlike {% else %} 🤍 Like {% endif %}
+      </button>
+    </form>
+    <form method="POST" action="{% url 'bookmark-opportunity' opportunity.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn">
+        {% if opportunity in bookmarked_opps %} 🔖 Remove {% else %} 📌 Bookmark {% endif %}
+      </button>
+    </form>
+  {% endif %}
+
+  <p>❤️ {{ opportunity.likes.count }} Likes · 🔖 {{ opportunity.bookmarks.count }} Bookmarks</p>
+</div>
