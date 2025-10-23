@@ -30,9 +30,12 @@ class Opportunity(models.Model):
     tags = models.ManyToManyField(Tag)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opportunities')
     created_at = models.DateTimeField(default=timezone.now)
-    
+
     def get_absolute_url(self):
         return reverse('opportunity-detail', kwargs={'pk': self.pk})
+
+    class Meta:
+        verbose_name_plural = "Opportunities"
 
 
 class Like(models.Model):

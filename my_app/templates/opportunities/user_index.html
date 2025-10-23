@@ -43,7 +43,7 @@
           <button type="submit" class="btn danger">Remove Bookmark</button>
         </form>
 
-        <form method="POST" action="{% url 'mark-complete' opp.pk %}">
+        <form method="POST" action="{% url 'complete-bookmark' opp.pk %}">
           {% csrf_token %}
           <button type="submit" class="btn">Mark as Completed</button>
         </form>
