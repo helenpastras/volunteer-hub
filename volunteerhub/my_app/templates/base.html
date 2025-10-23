@@ -7,30 +7,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-    <title>Volunteer Hub</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>ripple - Volunteer</title>
     {% block head %} 
     {% endblock %}
     </head>
   <body>
     <header>
-      
-      <nav>
-        <ul>
-          {% if user.is_authenticated %}
-         <li><a href="{% url 'opps-index' %}">All Opportunities</a></li>
-         <li><a href="{% url 'opp-create' %}">Add a new Opportunity</a></li>
-         <li><a href="{% url 'likes-index' %}">Liked Opportunities</a></li>
-         <li><a href="{% url 'bookmarks-index' %}">Saved Opportunities</a></li>
-         <li>
-          <form id="logout-form" method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Log out</button>
-          </form>
-        </li>
-         {% endif %}
-         <li><a href="{% url 'about' %}">About</a></li>
-        </ul>
+      <nav class="main-nav">
+        <div class="nav-left">
+          <a href="{% url 'home' %}" class="logo">🌊 ripple</a>
+        </div>
+        <div class="nav-right">
+          <ul>
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'about' %}">About</a></li>
+              <li><a href="{% url 'opps-index' %}">All Opportunities</a></li>
+              <li><a href="{% url 'user-opps-index' %}">My Opportunities</a></li>
+              <li><a href="{% url 'opp-create' %}">Add Opportunity</a></li>
+              <li>
+                <div class="nav-logout">
+                  <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit">Log out</button>
+                  </form>
+                </div>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
       </nav>
     </header>
     <main>

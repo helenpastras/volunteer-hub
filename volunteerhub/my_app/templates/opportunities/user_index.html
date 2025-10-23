@@ -19,24 +19,34 @@
   </section>
 
   <section>
-    <h2>Liked Opportunities</h2>
-    {% for opp in liked_opps %}
-      <div class="card">
-        <a href="{% url 'opportunity-detail' opp.id %}">{{ opp.title }}</a>
-        <p>{{ opp.location }} — {{ opp.date }}</p>
-      </div>
-    {% empty %}
-      <p>You haven’t liked any opportunities yet.</p>
-    {% endfor %}
-  </section>
+    <section>
+  <h2>Liked Opportunities</h2>
+  {% for opp in liked_opps %}
+    <div class="card">
+      <a href="{% url 'opportunity-detail' opp.pk %}">{{ opp.title }}</a>
+      <form method="POST" action="{% url 'unlike-opportunity' opp.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn danger">Unlike</button>
+      </form>
+    </div>
+  {% endfor %}
+</section>
 
-  <section>
-    <h2>Saved Opportunities</h2>
-    {% for opp in bookmarked_opps %}
-      <div class="card">
-        <a href="{% url 'opportunity-detail' opp.id %}">{{ opp.title }}</a>
-        <p>{{ opp.location }} — {{ opp.date }}</p>
-      </div>
+<section>
+  <h2>Bookmarked Opportunities</h2>
+  {% for opp in bookmarked_opps %}
+    <div class="card">
+      <a href="{% url 'opportunity-detail' opp.pk %}">{{ opp.title }}</a>
+      <form method="POST" action="{% url 'remove-bookmark' opp.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn danger">Remove Bookmark</button>
+      </form>
+      <form method="POST" action="{% url 'complete-bookmark' opp.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn">Mark as Completed</button>
+      </form>
+    </div>
+
     {% empty %}
       <p>You haven’t saved any opportunities yet.</p>
     {% endfor %}

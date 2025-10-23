@@ -6,7 +6,7 @@
   <p><strong>When?</strong> {{ opportunity.date }}</p>
   <p><strong>Description:</strong> <small>{{ opportunity.description }}</small></p>
 
-  {% if user.is_authenticated %}
+  {% if user.is_authenticated and opportunity.created_by != user %}
     <form method="POST" action="{% url 'like-opportunity' opportunity.pk %}">
       {% csrf_token %}
       <button type="submit" class="btn">

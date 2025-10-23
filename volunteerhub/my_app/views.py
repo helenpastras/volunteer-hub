@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic.edit import CreateView,UpdateView, DeleteView
 from django.views.generic.detail import DetailView
-from django.forms import modelformset_factory
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
@@ -22,17 +22,6 @@ def home(request):
         'liked_opps': liked_opps,
         'bookmarked_opps': bookmarked_opps,
     })
-
-def like_opportunity(request, pk):
-    opportunity = get_object_or_404(Opportunity, pk=pk)
-    Like.objects.get_or_create(user=request.user, opportunity=opportunity)
-    return redirect(request.META.get('HTTP_REFERER', 'home'))
-
-def bookmark_opportunity(request, pk):
-    opportunity = get_object_or_404(Opportunity, pk=pk)
-    Bookmark.objects.get_or_create(user=request.user, opportunity=opportunity)
-    return redirect(request.META.get('HTTP_REFERER', 'home'))
-
 
 
 def signup(request):
@@ -82,7 +71,6 @@ def user_opps_index(request):
     }
     return render(request, 'opportunities/user_index.html', context)
 
-
 def likes_index(request):
     liked_opps = request.user.liked_opportunities.all()
     return render(request, 'likes_index.html', {
@@ -96,7 +84,7 @@ def bookmarks_index(request):
     })
 
 
-# CRUD
+# CRUD for Opportunities
 class OpportunityCreate(LoginRequiredMixin, CreateView):
     model = Opportunity
     fields = ['title', 'description', 'location', 'date', 'tags']
@@ -127,3 +115,39 @@ class OpportunityDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         return self.get_object().created_by == self.request.user
+
+
+# CRUD for Likes
+def like_opportunity(request, pk):
+    opportunity = get_object_or_404(Opportunity, pk=pk)
+    Like.objects.get_or_create(user=request.user, opportunity=opportunity)
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+@login_required
+def unlike_opportunity(request, pk):
+    opportunity = get_object_or_404(Opportunity, pk=pk)
+    Like.objects.filter(user=request.user, opportunity=opportunity).delete()
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+
+# CRUD for Bookmarks
+def bookmark_opportunity(request, pk):
+    opportunity = get_object_or_404(Opportunity, pk=pk)
+    Bookmark.objects.get_or_create(user=request.user, opportunity=opportunity)
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+@login_required
+def remove_bookmark(request, pk):
+    opportunity = get_object_or_404(Opportunity, pk=pk)
+    Bookmark.objects.filter(user=request.user, opportunity=opportunity).delete()
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+@login_required
+def complete_bookmark(request, pk):
+    opportunity = get_object_or_404(Opportunity, pk=pk)
+    bookmark = Bookmark.objects.filter(user=request.user, opportunity=opportunity).first()
+    if bookmark:
+        bookmark.completed = True
+        bookmark.completed_at = timezone.now()
+        bookmark.save()
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
