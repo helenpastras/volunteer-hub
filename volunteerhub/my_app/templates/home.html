@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block head %}
-  <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-{% endblock %}
-
 {% block content %}
-  <img src="{% static 'images/ripple-volunteer-logo.png' %}" alt="ripple's logo with a concentric heatrs as ripples" />
-  <h2>Small acts of kindness in motion, big impact for our community and the world</h2>
-  <h3>A volunteering community hub where you can find volunteering opportunities near you, add your own, and manage your saves.</h3>
+  <section class="logo-banner">
+    <img src="{% static 'images/ripple-volunteer-logo.png' %}" alt="ripple's logo with concentric hearts as ripples" />
+  </section>
+
+  <section class="intro">
+    <h2>Small acts of kindness in motion, big impact for our community and the world</h2>
+    <h3>A volunteering community hub where you can find volunteering opportunities near you, add your own, and manage your saves.</h3>
+  </section>
 
   {% if not user.is_authenticated %}
     <section class="auth-options">

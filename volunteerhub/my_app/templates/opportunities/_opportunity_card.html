@@ -7,18 +7,21 @@
   <p><strong>Description:</strong> <small>{{ opportunity.description }}</small></p>
 
   {% if user.is_authenticated and opportunity.created_by != user %}
-    <form method="POST" action="{% url 'like-opportunity' opportunity.pk %}">
-      {% csrf_token %}
-      <button type="submit" class="btn">
-        {% if opportunity in liked_opps %} ❤️ Unlike {% else %} 🤍 Like {% endif %}
-      </button>
-    </form>
-    <form method="POST" action="{% url 'bookmark-opportunity' opportunity.pk %}">
-      {% csrf_token %}
-      <button type="submit" class="btn">
-        {% if opportunity in bookmarked_opps %} 🔖 Remove {% else %} 📌 Bookmark {% endif %}
-      </button>
-    </form>
+    <div class="actions">
+      <form method="POST" action="{% url 'like-opportunity' opportunity.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn">
+          {% if opportunity in liked_opps %} ❤️ Unlike {% else %} 🤍 Like {% endif %}
+        </button>
+      </form>
+
+      <form method="POST" action="{% url 'bookmark-opportunity' opportunity.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn">
+          {% if opportunity in bookmarked_opps %} 🔖 Remove {% else %} 📌 Bookmark {% endif %}
+        </button>
+      </form>
+    </div>
   {% endif %}
 
   <p>❤️ {{ opportunity.likes.count }} Likes · 🔖 {{ opportunity.bookmarks.count }} Bookmarks</p>

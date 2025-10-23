@@ -37,14 +37,17 @@
   {% for opp in bookmarked_opps %}
     <div class="card">
       <a href="{% url 'opportunity-detail' opp.pk %}">{{ opp.title }}</a>
-      <form method="POST" action="{% url 'remove-bookmark' opp.pk %}">
-        {% csrf_token %}
-        <button type="submit" class="btn danger">Remove Bookmark</button>
-      </form>
-      <form method="POST" action="{% url 'complete-bookmark' opp.pk %}">
-        {% csrf_token %}
-        <button type="submit" class="btn">Mark as Completed</button>
-      </form>
+      <div class="actions">
+        <form method="POST" action="{% url 'remove-bookmark' opp.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn danger">Remove Bookmark</button>
+        </form>
+
+        <form method="POST" action="{% url 'mark-complete' opp.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn">Mark as Completed</button>
+        </form>
+      </div>
     </div>
 
     {% empty %}

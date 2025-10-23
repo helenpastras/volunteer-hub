@@ -1,0 +1,51 @@
+.logo-banner {
+  background-color: var(--ripple-sage);
+  padding: 1rem 2rem;
+  text-align: center;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.logo-banner img {
+  max-height: 80px;
+  width: auto;
+}
+
+.intro {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.intro h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.intro h3 {
+  font-size: 1.2rem;
+  color: var(--ripple-muted);
+}
+
+.auth-options,
+.welcome-back {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--ripple-cream);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.auth-options h2,
+.welcome-back h2 {
+  margin-bottom: 0.5rem;
+}
+
+.auth-options p {
+  margin-bottom: 1rem;
+}
+
+.auth-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
